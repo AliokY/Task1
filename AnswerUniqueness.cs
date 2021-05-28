@@ -6,8 +6,7 @@ namespace Task1_probation
     {
         // result of checking uniqueness of response
         private static bool _answerExists = false;
-
-        
+              
 
         /// <summary>
         /// checking the answer for uniqueness
