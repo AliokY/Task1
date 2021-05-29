@@ -2,21 +2,21 @@
 using System.Text.RegularExpressions;
 using System.Timers;
 
-namespace Task1_probation
+namespace Task1probation
 {
     class Program
     {
         private static Timer _inputTimer;
 
+        // determining scopes basic word length
+        const int MinWordLenth = 8, MaxWordLenth = 30;
+
         static void Main(string[] args)
         {
             Localization loc = new();
 
-            // determining scopes basic word length
-            const int MinWordLenth = 8, MaxWordLenth = 30;
-
             Console.WriteLine("Select the language of the game, please (выберите язык игры, пожалуйста):\n" +
-            "number(число) - 1(en) or(или) - 2(ru)");
+        "number(число) - 1(en) or(или) - 2(ru)");
 
             Localization.Language programLanguage;
 
@@ -54,11 +54,12 @@ namespace Task1_probation
 
             Console.WriteLine(loc.Messages["gameRules"]);
 
-            
+            GameStarter gs = new(loc);
 
-            GameStarter gs = new();
-
-            
+            string player1Name, player2Name;
+            Console.WriteLine(loc.Messages["inputPlayerName"]);
+            player1Name = Console.ReadLine();
+            player2Name = Console.ReadLine();
 
             Console.WriteLine(loc.Messages["inputMainWord"]);
 
@@ -85,10 +86,7 @@ namespace Task1_probation
                     break;
                 }
             }
-
-
-
-            gs.StartGame();
+            gs.StartGame(player1Name, player2Name);
         }
         // TODO
         // 1. format the code

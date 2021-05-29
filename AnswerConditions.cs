@@ -1,7 +1,10 @@
-﻿namespace Task1_probation
+﻿namespace Task1probation
 {
     class AnswerConditions
     {
+        // result of symbols matching
+        bool _answerIsValid = true;
+
         /// <summary>
         /// checking the answer for compliance to condition
         /// </summary>
@@ -10,9 +13,6 @@
         /// <returns>checking result</returns>
         internal bool CheckAnswerToConditions(string motherWord, string answerWord)
         {
-            // result of symbols matching
-            bool _answerIsValid = true;
-
             // checking for the presence of characters in the response with the main word. Given the quantity
             for (int i = 0; i < answerWord.Length; i++)
             {

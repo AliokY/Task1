@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace Task1_probation
+namespace Task1probation
 {
     class AnswerUniqueness
     {
         // result of checking uniqueness of response
-        private static bool _answerExists = false;
-              
+        private bool _answerExists = false;
 
         /// <summary>
         /// checking the answer for uniqueness

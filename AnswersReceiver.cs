@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Task1_probation
+namespace Task1probation
 {
     class AnswersReceiver
     {

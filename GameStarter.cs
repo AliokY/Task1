@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Task1_probation
+namespace Task1probation
 {
     class GameStarter
     {
+        private Localization Local;
+
+        public GameStarter(Localization loc)
+        {
+            Local = loc;
+        }
+
         // for saving all entered answers
         private List<string> _allAnswers = new();
 
@@ -27,7 +34,7 @@ namespace Task1_probation
         /// <summary>
         /// alternates players' responses
         /// </summary>
-        internal void StartGame()
+        internal void StartGame(string player1Name, string player2Name)
         {
             string playerName;
 
@@ -38,12 +45,6 @@ namespace Task1_probation
             bool answerIsValid;
 
             bool answerExists;
-
-            PlayerNames pl = new();
-
-            List<string> playerNames = pl.GetPlayerName();
-
-            Localization local = new();
 
             AnswersReceiver ar = new();
 
@@ -56,14 +57,14 @@ namespace Task1_probation
             {
                 if (moveNumber % 2 == 0)
                 {
-                    playerName = playerNames[1];
+                    playerName = player1Name;
                 }
                 else
                 {
-                    playerName = playerNames[0];
+                    playerName = player2Name;
                 }
 
-                Console.WriteLine("Игрок {0}, введите ваш ответ, пожалуйста", playerName);
+                Console.WriteLine(Local.Messages["inputAnswer"], playerName);
 
                 answerWord = ar.InputAnswer();
 
@@ -71,12 +72,8 @@ namespace Task1_probation
 
                 if (!answerIsValid)
                 {
-
-
-                    Console.WriteLine("Ответ не соответствует условию. Игрок {0} проиграл", playerName);
-
+                    Console.WriteLine(Local.Messages["incorrectAnswer"], playerName);
                     Console.ReadKey();
-
                     break;
                 }
 
@@ -84,10 +81,8 @@ namespace Task1_probation
 
                 if (answerExists)
                 {
-                    Console.WriteLine("Это повторяющееся слово. Игрок {0} проиграл", playerName);
-
+                    Console.WriteLine(Local.Messages["repeatingWord"], playerName);
                     Console.ReadKey();
-
                     break;
                 }
                 moveNumber++;
