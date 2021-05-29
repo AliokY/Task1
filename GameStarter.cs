@@ -34,7 +34,7 @@ namespace Task1probation
         /// <summary>
         /// alternates players' responses
         /// </summary>
-        internal void StartGame(string player1Name, string player2Name)
+        internal void Start(string player1Name, string player2Name)
         {
             string playerName;
 
@@ -42,9 +42,7 @@ namespace Task1probation
 
             string answerWord;
 
-            bool answerIsValid;
-
-            bool answerExists;
+            bool answerIsValid, answerExists;
 
             AnswersReceiver ar = new();
 
@@ -67,6 +65,24 @@ namespace Task1probation
                 Console.WriteLine(Local.Messages["inputAnswer"], playerName);
 
                 answerWord = ar.InputAnswer();
+
+                switch (answerWord)
+                {
+                    case "/show-words":
+                        foreach (string a in _allAnswers)
+                        {
+                            Console.Write(a + " ");
+                        }
+                        Console.WriteLine();
+                        Console.WriteLine("Нажмите любую кнопку чтобы продолжить");
+                        Console.ReadKey();
+                        Console.WriteLine();
+                        continue;
+
+
+
+
+                }
 
                 answerIsValid = ac.CheckAnswerToConditions(MotherWord, answerWord);
 

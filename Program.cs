@@ -6,6 +6,8 @@ namespace Task1probation
 {
     class Program
     {
+
+
         private static Timer _inputTimer;
 
         // determining scopes basic word length
@@ -86,7 +88,7 @@ namespace Task1probation
                     break;
                 }
             }
-            gs.StartGame(player1Name, player2Name);
+            gs.Start(player1Name, player2Name);
         }
         // TODO
         // 1. format the code
