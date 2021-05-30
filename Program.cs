@@ -6,8 +6,6 @@ namespace Task1probation
 {
     class Program
     {
-
-
         private static Timer _inputTimer;
 
         // determining scopes basic word length
@@ -62,6 +60,9 @@ namespace Task1probation
             Console.WriteLine(loc.Messages["inputPlayerName"]);
             player1Name = Console.ReadLine();
             player2Name = Console.ReadLine();
+
+            Player pl1 = new(player1Name);
+            Player pl2 = new(player2Name);
 
             Console.WriteLine(loc.Messages["inputMainWord"]);
 

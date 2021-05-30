@@ -34,7 +34,7 @@ namespace Task1probation
         /// <summary>
         /// alternates players' responses
         /// </summary>
-        internal void Start(string player1Name, string player2Name)
+        internal void Start(Player pl1, Player pl2)
         {
             string playerName;
 
@@ -55,11 +55,11 @@ namespace Task1probation
             {
                 if (moveNumber % 2 == 0)
                 {
-                    playerName = player1Name;
+                    playerName = pl1.Name;
                 }
                 else
                 {
-                    playerName = player2Name;
+                    playerName = pl2.Name;
                 }
 
                 Console.WriteLine(Local.Messages["inputAnswer"], playerName);
