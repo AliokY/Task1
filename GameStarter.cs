@@ -34,7 +34,11 @@ namespace Task1probation
         /// <summary>
         /// alternates players' responses
         /// </summary>
+<<<<<<< HEAD
         internal void Start(List<Player> allPlayersInfo, Player pl1, Player pl2)
+=======
+        internal void Start(Player pl1, Player pl2)
+>>>>>>> 56666d610f71edc4989797423e63af2588c278ef
         {
             int moveNumber = 1;
 
@@ -55,11 +59,19 @@ namespace Task1probation
             {
                 if (moveNumber % 2 == 0)
                 {
+<<<<<<< HEAD
                     pl = pl1;
                 }
                 else
                 {
                     pl = pl2;
+=======
+                    playerName = pl1.Name;
+                }
+                else
+                {
+                    playerName = pl2.Name;
+>>>>>>> 56666d610f71edc4989797423e63af2588c278ef
                 }
 
                 Console.WriteLine(Local.Messages["inputAnswer"], pl.Name);
