@@ -65,7 +65,7 @@ namespace Task1probation
             Player pl1 = new(player1Name);
             Player pl2 = new(player2Name);
 
-<<<<<<< HEAD
+
             List<Player> allPlayersInfo = new();
 
             try
@@ -78,8 +78,7 @@ namespace Task1probation
                 Console.WriteLine("Эти игроки играют впервые");
             }
 
-=======
->>>>>>> 56666d610f71edc4989797423e63af2588c278ef
+
             Console.WriteLine(loc.Messages["inputMainWord"]);
 
             while (true)
