@@ -34,10 +34,8 @@ namespace Task1probation
         /// <summary>
         /// alternates players' responses
         /// </summary>
-        internal void Start(string player1Name, string player2Name)
+        internal void Start(List<Player> allPlayersInfo, Player pl1, Player pl2)
         {
-            string playerName;
-
             int moveNumber = 1;
 
             string answerWord;
@@ -50,19 +48,21 @@ namespace Task1probation
 
             AnswerConditions ac = new();
 
+            Player pl;
+
             // changes the player's number depending on the move number
             while (true)
             {
                 if (moveNumber % 2 == 0)
                 {
-                    playerName = player1Name;
+                    pl = pl1;
                 }
                 else
                 {
-                    playerName = player2Name;
+                    pl = pl2;
                 }
 
-                Console.WriteLine(Local.Messages["inputAnswer"], playerName);
+                Console.WriteLine(Local.Messages["inputAnswer"], pl.Name);
 
                 answerWord = ar.InputAnswer();
 
@@ -79,16 +79,58 @@ namespace Task1probation
                         Console.WriteLine();
                         continue;
 
+                    case "/score":
 
+                        List<Player> currentPlayersInfo = pl.GetCurrentPlayerInfo(pl1, pl2);
 
+                        if (currentPlayersInfo == null)
+                        {
+                            Console.WriteLine("У текущих игроков пока нет игр. Нажмите любую кнопку чтобы продолжить");
+                            Console.ReadKey();
+                            Console.WriteLine();
+                        }
+                        else
+                        {
+                            foreach (Player p in currentPlayersInfo)
+                            {
+                                Console.WriteLine("У игрока {0}: {1} побед, {2} поражений.", p.Name, p.Wins, p.Defeats);
+                            }
+                            Console.WriteLine("Нажмите любую кнопку чтобы продолжить");
+                            Console.ReadKey();
+                            Console.WriteLine();
+                        }
+                        continue;
 
+                    case "/total-score":
+
+                        allPlayersInfo = pl.GetAllPlayersInfo();
+                        if (allPlayersInfo == null)
+                        {
+                            Console.WriteLine("Пока нет завершённых игр. Нажмите любую кнопку чтобы продолжить");
+                            Console.ReadKey();
+                            Console.WriteLine();
+                        }
+                        else
+                        {
+                            foreach (Player p in allPlayersInfo)
+                            {
+                                Console.WriteLine("У игрока {0}: {1} побед, {2} поражений.", p.Name, p.Wins, p.Defeats);
+                            }
+                            Console.WriteLine("Нажмите любую кнопку чтобы продолжить");
+                            Console.ReadKey();
+                            Console.WriteLine();
+                        }
+
+                        continue;
                 }
 
                 answerIsValid = ac.CheckAnswerToConditions(MotherWord, answerWord);
 
                 if (!answerIsValid)
                 {
-                    Console.WriteLine(Local.Messages["incorrectAnswer"], playerName);
+                    pl.CalculateGameResult(pl, pl1, pl2);
+                    Console.WriteLine(Local.Messages["incorrectAnswer"], pl.Name);
+                    pl.RecordPlayerInfo(allPlayersInfo, pl1, pl2);
                     Console.ReadKey();
                     break;
                 }
@@ -97,7 +139,9 @@ namespace Task1probation
 
                 if (answerExists)
                 {
-                    Console.WriteLine(Local.Messages["repeatingWord"], playerName);
+                    pl.CalculateGameResult(pl, pl1, pl2);
+                    pl.RecordPlayerInfo(allPlayersInfo, pl1, pl2);
+                    Console.WriteLine(Local.Messages["repeatingWord"], pl.Name);
                     Console.ReadKey();
                     break;
                 }

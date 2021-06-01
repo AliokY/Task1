@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Timers;
 
@@ -6,8 +7,6 @@ namespace Task1probation
 {
     class Program
     {
-
-
         private static Timer _inputTimer;
 
         // determining scopes basic word length
@@ -63,6 +62,21 @@ namespace Task1probation
             player1Name = Console.ReadLine();
             player2Name = Console.ReadLine();
 
+            Player pl1 = new(player1Name);
+            Player pl2 = new(player2Name);
+
+            List<Player> allPlayersInfo = new();
+
+            try
+            {
+                allPlayersInfo = pl1.GetAllPlayersInfo();
+                pl1.AssignPreviousGamesResults(allPlayersInfo, pl1, pl2);
+            }
+            catch 
+            {
+                Console.WriteLine("Эти игроки играют впервые");
+            }
+
             Console.WriteLine(loc.Messages["inputMainWord"]);
 
             while (true)
@@ -88,7 +102,7 @@ namespace Task1probation
                     break;
                 }
             }
-            gs.Start(player1Name, player2Name);
+            gs.Start(allPlayersInfo, pl1, pl2);
         }
         // TODO
         // 1. format the code
