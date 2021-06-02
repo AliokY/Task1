@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Timers;
+//using System.Timers;
 
 namespace Task1probation
 {
     class Program
     {
-        private static Timer _inputTimer;
+        //private static Timer _inputTimer;
 
         // determining scopes basic word length
         const int MinWordLenth = 8, MaxWordLenth = 30;
@@ -57,6 +57,7 @@ namespace Task1probation
 
             GameStarter gs = new(loc);
 
+            // Assigning names to current players
             string player1Name, player2Name;
             Console.WriteLine(loc.Messages["inputPlayerName"]);
             player1Name = Console.ReadLine();
@@ -77,7 +78,6 @@ namespace Task1probation
             {
                 Console.WriteLine("Эти игроки играют впервые");
             }
-
 
             Console.WriteLine(loc.Messages["inputMainWord"]);
 
@@ -110,12 +110,12 @@ namespace Task1probation
         // 1. format the code
         // 2. add a timer to track remaining time to answer
         // 3. fix the issue of reading chaaracters after time is over.
-        private static void _inputTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            _inputTimer.Stop();
-            Console.WriteLine("Your time is over!");
-            Console.ReadKey();
-            Environment.Exit(0);
-        }
+        //private static void _inputTimer_Elapsed(object sender, ElapsedEventArgs e)
+        //{
+        //    _inputTimer.Stop();
+        //    Console.WriteLine("Your time is over!");
+        //    Console.ReadKey();
+        //    Environment.Exit(0);
+        //}
     }
 }

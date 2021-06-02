@@ -3,9 +3,17 @@ using System.Collections.Generic;
 
 namespace Task1probation
 {
-    class GameStarter
+    class GameStarter : IStarter
     {
         private Localization Local;
+
+        private AnswersReceiver ar;
+
+        private AnswerUniqueness au;
+
+        private AnswerConditions ac;
+
+        private Player pl;
 
         public GameStarter(Localization loc)
         {
@@ -28,14 +36,11 @@ namespace Task1probation
             {
                 _motherWord = value;
             }
-
         }
-
         /// <summary>
         /// alternates players' responses
         /// </summary>
-
-        internal void Start(List<Player> allPlayersInfo, Player pl1, Player pl2)
+        public void Start(List<Player> allPlayersInfo, Player pl1, Player pl2)
         {
             int moveNumber = 1;
 
@@ -43,27 +48,16 @@ namespace Task1probation
 
             bool answerIsValid, answerExists;
 
-            AnswersReceiver ar = new();
-
-            AnswerUniqueness au = new();
-
-            AnswerConditions ac = new();
-
-            Player pl;
-
             // changes the player's number depending on the move number
             while (true)
             {
                 if (moveNumber % 2 == 0)
                 {
-
                     pl = pl1;
                 }
                 else
                 {
                     pl = pl2;
-
-
                 }
                 Console.WriteLine(Local.Messages["inputAnswer"], pl.Name);
 
@@ -71,13 +65,17 @@ namespace Task1probation
 
                 switch (answerWord)
                 {
+                    case "/info":
+                        Console.WriteLine(Local.Messages["info"]);
+                        continue;
+
                     case "/show-words":
                         foreach (string a in _allAnswers)
                         {
                             Console.Write(a + " ");
                         }
                         Console.WriteLine();
-                        Console.WriteLine("Нажмите любую кнопку чтобы продолжить");
+                        Console.WriteLine(Local.Messages["continue"]);
                         Console.ReadKey();
                         Console.WriteLine();
                         continue;
@@ -86,9 +84,9 @@ namespace Task1probation
 
                         List<Player> currentPlayersInfo = pl.GetCurrentPlayerInfo(pl1, pl2);
 
-                        if (currentPlayersInfo == null)
+                        if (currentPlayersInfo.Count == 0)
                         {
-                            Console.WriteLine("У текущих игроков пока нет игр. Нажмите любую кнопку чтобы продолжить");
+                            Console.WriteLine(Local.Messages["currentPlayerNoGames"]);
                             Console.ReadKey();
                             Console.WriteLine();
                         }
@@ -96,34 +94,32 @@ namespace Task1probation
                         {
                             foreach (Player p in currentPlayersInfo)
                             {
-                                Console.WriteLine("У игрока {0}: {1} побед, {2} поражений.", p.Name, p.Wins, p.Defeats);
+                                Console.WriteLine(Local.Messages["playerInfo"], p.Name, p.Wins, p.Defeats);
                             }
-                            Console.WriteLine("Нажмите любую кнопку чтобы продолжить");
+                            Console.WriteLine(Local.Messages["continue"]);
                             Console.ReadKey();
                             Console.WriteLine();
                         }
                         continue;
 
                     case "/total-score":
-
-                        allPlayersInfo = pl.GetAllPlayersInfo();
-                        if (allPlayersInfo == null)
+                        try
                         {
-                            Console.WriteLine("Пока нет завершённых игр. Нажмите любую кнопку чтобы продолжить");
-                            Console.ReadKey();
-                            Console.WriteLine();
-                        }
-                        else
-                        {
+                            allPlayersInfo = pl.GetAllPlayersInfo();
                             foreach (Player p in allPlayersInfo)
                             {
-                                Console.WriteLine("У игрока {0}: {1} побед, {2} поражений.", p.Name, p.Wins, p.Defeats);
+                                Console.WriteLine(Local.Messages["playerInfo"], p.Name, p.Wins, p.Defeats);
                             }
-                            Console.WriteLine("Нажмите любую кнопку чтобы продолжить");
+                            Console.WriteLine(Local.Messages["continue"]);
                             Console.ReadKey();
                             Console.WriteLine();
                         }
-
+                        catch
+                        {
+                            Console.WriteLine(Local.Messages["noCompletedGames"]);
+                            Console.ReadKey();
+                            Console.WriteLine();
+                        }
                         continue;
                 }
 
@@ -151,6 +147,5 @@ namespace Task1probation
                 moveNumber++;
             }
         }
-
     }
 }

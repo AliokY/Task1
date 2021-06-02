@@ -8,7 +8,6 @@ namespace Task1probation
     [DataContract]
     class Player
     {
-
         [DataMember]
         public string Name { get; set; }
         [DataMember]
@@ -31,6 +30,12 @@ namespace Task1probation
 
         DataContractJsonSerializer jsonP = new DataContractJsonSerializer(typeof(List<Player>));
 
+        /// <summary>
+        /// Get the data of the current players from a .json file
+        /// </summary>
+        /// <param name="pl1"></param>
+        /// <param name="pl2"></param>
+        /// <returns></returns>
         internal List<Player> GetCurrentPlayerInfo(Player pl1, Player pl2)
         {
             List<Player> currentPlayersInfo = new();
@@ -48,6 +53,11 @@ namespace Task1probation
             }
             return currentPlayersInfo;
         }
+
+        /// <summary>
+        /// Get the data of all players from a .json file
+        /// </summary>
+        /// <returns></returns>
         internal List<Player> GetAllPlayersInfo()
         {
             List<Player> allPlayersInfo = new();
@@ -62,6 +72,13 @@ namespace Task1probation
             }
             return allPlayersInfo;
         }
+
+        /// <summary>
+        /// Adds the data of the current players to an existing .json file
+        /// </summary>
+        /// <param name="allPlayers"></param>
+        /// <param name="pl1"></param>
+        /// <param name="pl2"></param>
         internal void RecordPlayerInfo(List<Player> allPlayers, Player pl1, Player pl2)
         {
             allPlayers.Remove(pl1); allPlayers.Remove(pl2);
@@ -76,6 +93,12 @@ namespace Task1probation
             }
         }
 
+        /// <summary>
+        /// Correction of statistics of current players after the game
+        /// </summary>
+        /// <param name="pl"></param>
+        /// <param name="pl1"></param>
+        /// <param name="pl2"></param>
         internal void CalculateGameResult(Player pl, Player pl1, Player pl2)
         {
             if (pl == pl1)
@@ -88,6 +111,12 @@ namespace Task1probation
             }
         }
 
+        /// <summary>
+        /// Updating statistics of current players for previous games
+        /// </summary>
+        /// <param name="allPlayersInfo"></param>
+        /// <param name="pl1"></param>
+        /// <param name="pl2"></param>
         internal void AssignPreviousGamesResults(List<Player> allPlayersInfo, Player pl1, Player pl2)
         {
             foreach (Player p in allPlayersInfo)
@@ -101,8 +130,6 @@ namespace Task1probation
                     pl2.Wins = p.Wins; pl2.Defeats = p.Defeats;
                 }
             }
-
-
         }
     }
 }
