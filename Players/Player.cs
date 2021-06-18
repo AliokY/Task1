@@ -1,18 +1,16 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+using System;
 
 namespace Task1probation
 {
-    [DataContract]
+
     class Player
     {
-        [DataMember]
         public string Name { get; set; }
-        [DataMember]
         public int Wins { get; set; }
-        [DataMember]
         public int Defeats { get; set; }
 
         public Player()
@@ -28,7 +26,7 @@ namespace Task1probation
             Defeats = defeats;
         }
 
-        DataContractJsonSerializer jsonP = new DataContractJsonSerializer(typeof(List<Player>));
+
 
         /// <summary>
         /// Get the data of the current players from a .json file
@@ -40,20 +38,51 @@ namespace Task1probation
         {
             List<Player> currentPlayersInfo = new();
 
-            using (FileStream fs = new FileStream("GameStatistics.json", FileMode.OpenOrCreate))
+            using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["PlayersInfo"].ConnectionString))
             {
-                List<Player> allPlayers = (List<Player>)jsonP.ReadObject(fs);
-                foreach (Player p in allPlayers)
+                sqlConnection.Open();
+
+                if (sqlConnection.State == ConnectionState.Open)
                 {
-                    if (p.Name == pl1.Name || p.Name == pl2.Name)
+                    Console.WriteLine("Connection established");
+                }
+
+                string sql = $"SELECT Name, Wins, Defeats FROM PlayersInfo WHERE Name in (@name1, @name2)";
+
+                SqlCommand command = new SqlCommand(sql, sqlConnection);
+
+                SqlParameter name1Param = new SqlParameter("@name1", pl1.Name);
+
+                command.Parameters.Add(name1Param);
+
+                SqlParameter name2Param = new SqlParameter("@name2", pl2.Name);
+
+                command.Parameters.Add(name2Param);
+
+                var reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var playerName = reader[0].ToString();
+
+                    if (playerName == pl1.Name)
                     {
-                        currentPlayersInfo.Add(p);
+                        pl1.Wins = Convert.ToInt32(reader[1]);
+                        pl1.Defeats = Convert.ToInt32(reader[2]);
+                    }
+                    else if (playerName == pl2.Name)
+                    {
+                        pl2.Wins = Convert.ToInt32(reader[1]);
+                        pl2.Defeats = Convert.ToInt32(reader[2]);
                     }
                 }
-            }
-            return currentPlayersInfo;
-        }
 
+                currentPlayersInfo.Add(pl1);
+                currentPlayersInfo.Add(pl2);
+
+                return currentPlayersInfo;
+            }
+        }
         /// <summary>
         /// Get the data of all players from a .json file
         /// </summary>
@@ -62,17 +91,71 @@ namespace Task1probation
         {
             List<Player> allPlayersInfo = new();
 
-            using (FileStream fs = new FileStream("GameStatistics.json", FileMode.OpenOrCreate))
+            using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["PlayersInfo"].ConnectionString))
             {
-                List<Player> allPlayers = (List<Player>)jsonP.ReadObject(fs);
-                foreach (Player p in allPlayers)
+                sqlConnection.Open();
+
+                if (sqlConnection.State == ConnectionState.Open)
                 {
-                    allPlayersInfo.Add(p);
+                    Console.WriteLine("Connection established");
+                }
+
+                string sql = "SELECT Name, Wins, Defeats FROM PlayersInfo";
+
+                SqlCommand command = new SqlCommand(sql, sqlConnection);
+
+                var reader = command.ExecuteReader();
+
+                Player pl = new();
+
+                while (reader.Read())
+                {
+                    pl.Name = reader[0].ToString();
+                    pl.Wins = Convert.ToInt32(reader[1]);
+                    pl.Defeats = Convert.ToInt32(reader[2]);
+
+                    allPlayersInfo.Add(pl);
+                }
+                return allPlayersInfo;
+            }
+        }
+        private void AddOrUpdate(Player player)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["PlayersInfo"].ConnectionString))
+            {
+                sqlConnection.Open();
+
+                if (sqlConnection.State == ConnectionState.Open)
+                {
+                    Console.WriteLine("Connectioin established");
+                }
+                string sql = @"IF EXISTS (SELECT Name, Wins, Defeats FROM dbo.PlayersInfo WHERE Name = @name)
+                                 UPDATE dbo.PlayersInfo
+                                 SET (Wins = @wins, Defeats = @defeats)
+                                 WHERE Name = @name
+                               ELSE 
+                                 INSERT INTO dbo.PlayersInfo(Name, Wins, Defeats) VALUES (@name, @wins, @defeats)";
+
+                using (SqlCommand cmd = new SqlCommand(sql, sqlConnection))
+                {
+                    SqlParameter name = new SqlParameter("@name", player.Name);
+                    name.SqlDbType = SqlDbType.Char;
+                    cmd.Parameters.Add(name);
+
+                    SqlParameter wins = new SqlParameter("@wins", player.Wins);
+                    wins.SqlDbType = SqlDbType.Int;
+                    cmd.Parameters.Add(wins);
+
+                    SqlParameter defeats = new SqlParameter("@defeats", player.Defeats);
+                    defeats.SqlDbType = SqlDbType.Int;
+                    cmd.Parameters.Add(defeats);
                 }
             }
-            return allPlayersInfo;
-        }
 
+            // try to get from DB 
+            // if exists - update
+            // else - add
+        }
         /// <summary>
         /// Adds the data of the current players to an existing .json file
         /// </summary>
@@ -81,16 +164,8 @@ namespace Task1probation
         /// <param name="pl2"></param>
         internal void RecordPlayerInfo(List<Player> allPlayers, Player pl1, Player pl2)
         {
-            allPlayers.Remove(pl1); allPlayers.Remove(pl2);
-
-            List<Player> twoPlayersInfo = new List<Player>() { pl1, pl2 };
-
-            allPlayers.AddRange(twoPlayersInfo);
-
-            using (FileStream fs = new FileStream("GameStatistics.json", FileMode.OpenOrCreate))
-            {
-                jsonP.WriteObject(fs, allPlayers);
-            }
+            AddOrUpdate(pl1);
+            AddOrUpdate(pl2);
         }
 
         /// <summary>
@@ -103,11 +178,13 @@ namespace Task1probation
         {
             if (pl == pl1)
             {
-                pl1.Defeats += 1; pl2.Wins += 1;
+                pl1.Defeats += 1;
+                pl2.Wins += 1;
             }
             else
             {
-                pl2.Defeats += 1; pl1.Wins += 1;
+                pl2.Defeats += 1;
+                pl1.Wins += 1;
             }
         }
 

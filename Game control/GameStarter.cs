@@ -7,11 +7,11 @@ namespace Task1probation
     {
         private Localization Local;
 
-        private AnswersReceiver ar;
+        private AnswersReceiver ar = new();
 
-        private AnswerUniqueness au;
+        private AnswerUniqueness au = new();
 
-        private AnswerConditions ac;
+        private AnswerConditions ac = new();
 
         private Player pl;
 

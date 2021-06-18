@@ -60,7 +60,7 @@ namespace Task1probation
             // Assigning names to current players
             string player1Name, player2Name;
             Console.WriteLine(loc.Messages["inputPlayerName"]);
-            player1Name = Console.ReadLine();
+            player1Name = Console.ReadLine(); //добавить месседж
             player2Name = Console.ReadLine();
 
             Player pl1 = new(player1Name);
