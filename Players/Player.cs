@@ -51,16 +51,10 @@ namespace Task1probation
 
                 SqlCommand command = new SqlCommand(sql, sqlConnection);
 
-                SqlParameter name1Param = new SqlParameter("@name1", pl1.Name);
-
-                command.Parameters.Add(name1Param);
-
-                SqlParameter name2Param = new SqlParameter("@name2", pl2.Name);
-
-                command.Parameters.Add(name2Param);
+                command.Parameters.Add(new SqlParameter("@name1", pl1.Name));
+                command.Parameters.Add(new SqlParameter("@name2", pl2.Name));
 
                 var reader = command.ExecuteReader();
-
                 while (reader.Read())
                 {
                     var playerName = reader[0].ToString();
@@ -106,10 +100,10 @@ namespace Task1probation
 
                 var reader = command.ExecuteReader();
 
-                Player pl = new();
-
                 while (reader.Read())
                 {
+                    Player pl = new();
+
                     pl.Name = reader[0].ToString();
                     pl.Wins = Convert.ToInt32(reader[1]);
                     pl.Defeats = Convert.ToInt32(reader[2]);
@@ -129,9 +123,9 @@ namespace Task1probation
                 {
                     Console.WriteLine("Connectioin established");
                 }
-                string sql = @"IF EXISTS (SELECT Name, Wins, Defeats FROM dbo.PlayersInfo WHERE Name = @name)
+                string sql = @"IF EXISTS (SELECT * FROM dbo.PlayersInfo WHERE Name = @name)
                                  UPDATE dbo.PlayersInfo
-                                 SET (Wins = @wins, Defeats = @defeats)
+                                 SET Wins = @wins, Defeats = @defeats
                                  WHERE Name = @name
                                ELSE 
                                  INSERT INTO dbo.PlayersInfo(Name, Wins, Defeats) VALUES (@name, @wins, @defeats)";
@@ -149,6 +143,9 @@ namespace Task1probation
                     SqlParameter defeats = new SqlParameter("@defeats", player.Defeats);
                     defeats.SqlDbType = SqlDbType.Int;
                     cmd.Parameters.Add(defeats);
+
+
+                    cmd.ExecuteNonQuery();
                 }
             }
 

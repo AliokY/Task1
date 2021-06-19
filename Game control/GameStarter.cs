@@ -105,8 +105,8 @@ namespace Task1probation
                     case "/total-score":
                         try
                         {
-                            allPlayersInfo = pl.GetAllPlayersInfo();
-                            foreach (Player p in allPlayersInfo)
+                            var t = pl.GetAllPlayersInfo();
+                            foreach (Player p in t)
                             {
                                 Console.WriteLine(Local.Messages["playerInfo"], p.Name, p.Wins, p.Defeats);
                             }
